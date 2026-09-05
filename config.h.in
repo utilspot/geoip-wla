@@ -1,0 +1,8 @@
+/* config.h.  Generated from config.h.in by CMake.  */
+
+#cmakedefine GEOIP_ASSETS_DIR  "@GEOIP_ASSETS_DIR@"
+#cmakedefine GEOIP_BASE_URL    "@GEOIP_BASE_URL@"
+#cmakedefine GEOIP_ROOT_URL    "@GEOIP_ROOT_URL@"
+#cmakedefine GEOIP_SERVICE_URL "@GEOIP_SERVICE_URL@"
+#cmakedefine GEOIP_CITYV4_DAT  "@GEOIP_CITYV4_DAT@"
+#cmakedefine GEOIP_CITYV6_DAT  "@GEOIP_CITYV6_DAT@"

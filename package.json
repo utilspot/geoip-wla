@@ -1,0 +1,29 @@
+{
+  "name": "geoip-wla",
+  "version": "1.0.0",
+  "description": "Web client for GeoIP address lookups",
+  "homepage": "https://github.com/utilspot/geoip-wla",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/utilspot/geoip-wla.git"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "start": "node server/server.js",
+    "dev": "npm run build && npm run server",
+    "bitmake": "npx bitmake build",
+    "server": "build/package/bin/geoip_server",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.17",
+    "@types/react-dom": "^18.3.5",
+    "bitmake": "^0.0.1-develop.15",
+    "esbuild": "^0.24.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.7.2"
+  }
+}

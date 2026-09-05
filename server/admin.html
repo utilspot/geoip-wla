@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GeoIP Emulator — Admin</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f6fb;
+        --surface: #fff;
+        --border: #e2e6ef;
+        --text: #1b2130;
+        --muted: #667085;
+        --brand: #1d6fe0;
+        --ok: #12805c;
+        --err: #b42318;
+        --code-bg: #eef1f7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1420;
+          --surface: #161d2b;
+          --border: #263042;
+          --text: #e7ebf3;
+          --muted: #93a0b5;
+          --brand: #5aa2ff;
+          --ok: #4cc79b;
+          --err: #ff9a90;
+          --code-bg: #1e2736;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 32px 20px 56px; }
+      h1 { margin: 0 0 4px; font-size: 24px; }
+      h2 { margin: 28px 0 10px; font-size: 15px; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--muted); }
+      .sub { margin: 0; color: var(--muted); }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.88em; background: var(--code-bg);
+        padding: 0.1em 0.4em; border-radius: 6px;
+      }
+      .list {
+        display: flex; flex-direction: column; gap: 8px;
+        border: 1px solid var(--border); border-radius: 12px;
+        padding: 8px; background: var(--surface);
+      }
+      .row {
+        display: flex; gap: 12px; align-items: flex-start;
+        padding: 10px 12px; border-radius: 9px; cursor: pointer;
+        border: 1px solid transparent;
+      }
+      .row:hover { background: var(--bg); }
+      .row.active { border-color: color-mix(in srgb, var(--brand) 45%, var(--border)); }
+      .row input { margin-top: 3px; }
+      .meta { display: flex; flex-direction: column; }
+      .label { font-weight: 600; }
+      .label em { color: var(--brand); font-style: normal; font-weight: 600; }
+      .desc { color: var(--muted); font-size: 13px; }
+      .actions { margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+      button {
+        font: inherit; font-weight: 600; padding: 9px 18px;
+        color: #fff; background: var(--brand); border: 0;
+        border-radius: 9px; cursor: pointer;
+      }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .status { font-size: 13px; }
+      .status.ok { color: var(--ok); }
+      .status.err { color: var(--err); }
+      pre {
+        margin: 0; padding: 14px; background: var(--code-bg);
+        border-radius: 10px; overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12.5px; line-height: 1.45;
+      }
+      .try { display: flex; gap: 8px; margin-bottom: 10px; }
+      .try input {
+        flex: 1; padding: 9px 12px; font-size: 15px; color: var(--text);
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 9px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>GeoIP Emulator — Admin</h1>
+      <p class="sub">
+        Choose the preset the emulation server returns from
+        <code>POST /lookup</code>. This stands in for swapping the data the
+        <code>geoip-api-c</code> library would read from its <code>.dat</code> file.
+      </p>
+
+      <h2>Presets</h2>
+      <div id="presets" class="list">Loading…</div>
+      <div class="actions">
+        <button id="apply" disabled>Apply preset</button>
+        <span id="status" class="status"></span>
+      </div>
+
+      <h2>Response preview</h2>
+      <pre id="preview">—</pre>
+
+      <h2>Try a lookup</h2>
+      <div class="try">
+        <input id="ip" value="8.8.8.8" spellcheck="false" />
+        <button id="lookup">POST /lookup</button>
+      </div>
+      <pre id="result">—</pre>
+    </main>
+
+    <script>
+      const $ = (s) => document.querySelector(s);
+      let presets = [];
+      let current = null;
+      let selected = null;
+
+      function setStatus(msg, isErr) {
+        const el = $('#status');
+        el.textContent = msg;
+        el.className = 'status ' + (isErr ? 'err' : 'ok');
+        if (msg) setTimeout(() => { el.textContent = ''; el.className = 'status'; }, 4000);
+      }
+
+      function updatePreview() {
+        const p = presets.find((x) => x.id === selected);
+        $('#preview').textContent = p ? JSON.stringify(p.response, null, 2) : '—';
+      }
+
+      function render() {
+        const box = $('#presets');
+        box.textContent = '';
+        for (const p of presets) {
+          const row = document.createElement('label');
+          row.className = 'row' + (p.id === current ? ' active' : '');
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'preset';
+          input.value = p.id;
+          input.checked = p.id === selected;
+          input.addEventListener('change', () => {
+            selected = p.id;
+            updatePreview();
+            $('#apply').disabled = selected === current;
+          });
+
+          const meta = document.createElement('span');
+          meta.className = 'meta';
+          const label = document.createElement('span');
+          label.className = 'label';
+          label.textContent = p.label + ' ';
+          if (p.id === current) {
+            const tag = document.createElement('em');
+            tag.textContent = '(active)';
+            label.appendChild(tag);
+          }
+          const desc = document.createElement('span');
+          desc.className = 'desc';
+          desc.textContent = p.description;
+          meta.append(label, desc);
+
+          row.append(input, meta);
+          box.appendChild(row);
+        }
+        updatePreview();
+        $('#apply').disabled = selected === current;
+      }
+
+      async function load() {
+        const r = await fetch('/api/admin/presets');
+        const data = await r.json();
+        presets = data.presets;
+        current = data.current;
+        selected = current;
+        render();
+      }
+
+      $('#apply').addEventListener('click', async () => {
+        try {
+          const r = await fetch('/api/admin/state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ preset: selected }),
+          });
+          const data = await r.json();
+          if (!r.ok) {
+            setStatus(data.error || 'Failed to apply', true);
+            return;
+          }
+          current = data.current;
+          setStatus('Applied: ' + current);
+          render();
+        } catch (e) {
+          setStatus(String(e), true);
+        }
+      });
+
+      $('#lookup').addEventListener('click', async () => {
+        try {
+          const r = await fetch('/lookup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ip: $('#ip').value.trim() }),
+          });
+          $('#result').textContent = JSON.stringify(await r.json(), null, 2);
+        } catch (e) {
+          $('#result').textContent = String(e);
+        }
+      });
+
+      load().catch((e) => {
+        $('#presets').textContent = 'Error loading presets: ' + e.message;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+*.log
+*.local
+.DS_Store
+.vscode
+CMakeLists.txt.user*
