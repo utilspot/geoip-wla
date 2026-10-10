@@ -209,13 +209,18 @@ code {
   background: var(--surface);
 }
 
+.history-list li {
+  display: flex;
+  align-items: stretch;
+}
+
 .history-list li + li {
   border-top: 1px solid var(--border);
 }
 
-.history-list button {
-  display: block;
-  width: 100%;
+.history-item {
+  flex: 1;
+  min-width: 0;
   text-align: left;
   font: inherit;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -227,9 +232,30 @@ code {
   cursor: pointer;
 }
 
-.history-list button:hover {
+.history-list li:hover {
   background: color-mix(in srgb, var(--surface), var(--text) 2%);
+}
+
+.history-item:hover {
   color: var(--brand-ink);
+}
+
+.history-remove {
+  flex: none;
+  width: 32px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.history-remove:hover,
+.history-remove:focus-visible {
+  color: color-mix(in srgb, var(--muted), #fff 40%);
 }
 
 .hint {
@@ -266,6 +292,8 @@ code {
 }
 
 .flag {
+  font-family: 'Twemoji Country Flags', 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Noto Color Emoji', sans-serif;
   font-size: 40px;
   line-height: 1;
 }

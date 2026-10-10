@@ -1,6 +1,6 @@
 {
   "name": "geoip-wla",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Web client for GeoIP address lookups",
   "homepage": "https://github.com/utilspot/geoip-wla",
   "repository": {
@@ -20,8 +20,9 @@
   "devDependencies": {
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
-    "bitmake": "^0.0.1-develop.15",
-    "esbuild": "^0.24.2",
+    "bitmake": "^0.0.1-develop.16",
+    "country-flag-emoji-polyfill": "^0.1.10",
+    "esbuild": "^0.28.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.7.2"

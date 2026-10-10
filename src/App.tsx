@@ -239,8 +239,21 @@ export function App() {
             <ul className="history-list">
               {history.map((h) => (
                 <li key={h}>
-                  <button type="button" onClick={() => void runLookup(h)}>
+                  <button
+                    type="button"
+                    className="history-item"
+                    onClick={() => void runLookup(h)}
+                  >
                     {h}
+                  </button>
+                  <button
+                    type="button"
+                    className="history-remove"
+                    aria-label={`Remove ${h} from recent lookups`}
+                    title="Remove"
+                    onClick={() => setHistory((prev) => prev.filter((v) => v !== h))}
+                  >
+                    &times;
                   </button>
                 </li>
               ))}

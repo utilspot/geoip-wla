@@ -44,6 +44,7 @@ const MIME = {
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.txt': 'text/plain; charset=utf-8',
+  '.woff2': 'font/woff2',
 };
 
 function setCors(res) {
