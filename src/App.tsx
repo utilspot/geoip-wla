@@ -6,6 +6,13 @@ import type { GeoIpRecord, GeoIpResponse } from './types';
 const HISTORY_KEY = 'geoip-wla:history';
 const HISTORY_MAX = 10;
 
+// Served under a sub-path, so offer a way back to the site root.
+const SHOW_HOME = __APP_BASE_URL__ !== '/';
+
+// The page is served at the base URL without its trailing slash ("/geoip"),
+// except for the site root, which stays "/".
+const MAIN_URL = SHOW_HOME ? __APP_BASE_URL__.slice(0, -1) : '/';
+
 type Status = 'idle' | 'loading' | 'done' | 'error';
 
 /** Load the lookup history from localStorage (tolerant of missing/blocked storage). */
@@ -164,17 +171,17 @@ export function App() {
 
   return (
     <div className="page">
-      <header className="hero">
-        <div className="hero-inner">
-          <h1>
-            <span className="globe">{'\u{1F30D}'}</span> GeoIP Lookup
-          </h1>
-          <p>Resolve an IP address to a location.</p>
-          {__APP_BASE_URL__ !== '/' ? (
-            <a className="home-link" href="/">
+      <header className="app-header">
+        <div className="header-start">
+          <a className="brand" href={MAIN_URL}>
+            <img src={`${__APP_BASE_URL__}favicon.svg`} alt="" width={28} height={28} />
+            <span>GeoIP Lookup</span>
+          </a>
+          {SHOW_HOME && (
+            <a className="header-link" href="/">
               Home
             </a>
-          ) : null}
+          )}
         </div>
       </header>
 
@@ -239,8 +246,21 @@ export function App() {
             <ul className="history-list">
               {history.map((h) => (
                 <li key={h}>
-                  <button type="button" onClick={() => void runLookup(h)}>
+                  <button
+                    type="button"
+                    className="history-item"
+                    onClick={() => void runLookup(h)}
+                  >
                     {h}
+                  </button>
+                  <button
+                    type="button"
+                    className="history-remove"
+                    aria-label={`Remove ${h} from recent lookups`}
+                    title="Remove"
+                    onClick={() => setHistory((prev) => prev.filter((v) => v !== h))}
+                  >
+                    &times;
                   </button>
                 </li>
               ))}
