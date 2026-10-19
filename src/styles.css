@@ -64,56 +64,45 @@ code {
   flex-direction: column;
 }
 
-.hero {
-  background: linear-gradient(135deg, #12356b, #2f2170);
-  color: #fff;
-  /* bottom padding reserves room for the optional Home link, so the header is
-     the same height whether or not it is present */
-  padding: 48px 20px 44px;
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 60px;
+  padding: 0 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
 }
 
-.hero-inner {
-  position: relative;
-  max-width: 760px;
-  margin: 0 auto;
+.header-start {
+  display: flex;
+  align-items: center;
+  gap: 32px;
 }
 
-.home-link {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
+.header-link {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  color: var(--muted);
+  font-weight: 500;
   text-decoration: none;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 4px;
 }
 
-.home-link:hover {
-  background: rgba(255, 255, 255, 0.12);
+.header-link:hover,
+.header-link:focus-visible {
+  color: var(--text);
 }
 
-.hero h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
-  letter-spacing: -0.02em;
-}
-
-.hero .globe {
-  margin-right: 6px;
-}
-
-.hero p {
-  margin: 0;
-  opacity: 0.92;
-}
-
-.hero code {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .container {
@@ -209,13 +198,18 @@ code {
   background: var(--surface);
 }
 
+.history-list li {
+  display: flex;
+  align-items: stretch;
+}
+
 .history-list li + li {
   border-top: 1px solid var(--border);
 }
 
-.history-list button {
-  display: block;
-  width: 100%;
+.history-item {
+  flex: 1;
+  min-width: 0;
   text-align: left;
   font: inherit;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -227,9 +221,30 @@ code {
   cursor: pointer;
 }
 
-.history-list button:hover {
+.history-list li:hover {
   background: color-mix(in srgb, var(--surface), var(--text) 2%);
+}
+
+.history-item:hover {
   color: var(--brand-ink);
+}
+
+.history-remove {
+  flex: none;
+  width: 32px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.history-remove:hover,
+.history-remove:focus-visible {
+  color: color-mix(in srgb, var(--muted), #fff 40%);
 }
 
 .hint {
@@ -266,6 +281,8 @@ code {
 }
 
 .flag {
+  font-family: 'Twemoji Country Flags', 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Noto Color Emoji', sans-serif;
   font-size: 40px;
   line-height: 1;
 }

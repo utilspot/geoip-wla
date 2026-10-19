@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12356b" />
+      <stop offset="1" stop-color="#2f2170" />
+    </linearGradient>
+    <linearGradient id="pin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5aa2ff" />
+      <stop offset="1" stop-color="#1d6fe0" />
+    </linearGradient>
+    <clipPath id="globe">
+      <circle cx="320" cy="168" r="96" />
+    </clipPath>
+  </defs>
+
+  <rect width="640" height="400" rx="40" fill="url(#bg)" />
+
+  <!-- globe -->
+  <circle cx="320" cy="168" r="96" fill="#ffffff" fill-opacity="0.06" />
+  <g clip-path="url(#globe)" fill="none" stroke="#b8d4ff" stroke-opacity="0.45" stroke-width="2">
+    <ellipse cx="320" cy="168" rx="36" ry="96" />
+    <ellipse cx="320" cy="168" rx="72" ry="96" />
+    <line x1="320" y1="72" x2="320" y2="264" />
+    <line x1="224" y1="168" x2="416" y2="168" />
+    <path d="M232 120h176M232 216h176" />
+  </g>
+  <circle cx="320" cy="168" r="96" fill="none" stroke="#b8d4ff" stroke-opacity="0.7" stroke-width="3" />
+
+  <!-- location pin (same shape as favicon.svg) -->
+  <g transform="translate(272 96) scale(1.5)">
+    <path
+      d="M32 13c-7.7 0-13 5.4-13 13 0 9.7 13 25 13 25s13-15.3 13-25c0-7.6-5.3-13-13-13zm0 17.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"
+      fill="url(#pin)" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"
+    />
+  </g>
+
+  <text x="320" y="320" text-anchor="middle" fill="#ffffff"
+    font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    font-size="40" font-weight="700">GeoIP Lookup</text>
+  <text x="320" y="356" text-anchor="middle" fill="#b8d4ff"
+    font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    font-size="20">Resolve an IP address to a location</text>
+</svg>

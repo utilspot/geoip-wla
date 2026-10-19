@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(geoip-wla VERSION 1.0.0 LANGUAGES C)
+project(geoip-wla VERSION 1.1.0 LANGUAGES C)
 
 include(GNUInstallDirs)
 
@@ -65,8 +65,11 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES server.c)
 add_executable(geoip_server server.c)
 target_link_libraries(geoip_server PRIVATE LibNetQ::LibNetQ)
 
-if (CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang)$")
-  target_link_options(geoip_server PRIVATE "-Wl,-rpath,$ORIGIN/../lib" "-Wl,--disable-new-dtags")
+if (APPLE)
+  set_target_properties(geoip_server PROPERTIES INSTALL_RPATH "@loader_path/../lib")
+elseif (UNIX)
+  set_target_properties(geoip_server PROPERTIES INSTALL_RPATH "$ORIGIN/../lib")
+  target_link_options(geoip_server PRIVATE -Wl,--disable-new-dtags)
 endif ()
 
 if (GEOIP_INSTALL_DATABASES AND GEOIP_CITYV4_DAT)
